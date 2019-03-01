@@ -1,0 +1,251 @@
+//-----------------------#define e Variáveis------------------------///
+
+// Variaveis dos Leds da Sequencia e Valor das Entradas
+#define LED_VERMELHO    2
+#define LED_VERDE       3
+#define LED_AMARELO     4
+#define LED_VERMELHO2   5
+
+// Variaveis dos Botões da Sequencia e Valor das Entradas
+#define BUTTON_VERMELHO    6  
+#define BUTTON_VERDE       7
+#define BUTTON_AMARELO     8
+#define BUTTON_VERMELHO2   9
+
+// Variaveis dos Leds das Vidas e Valor das Entradas
+#define LED_VIDAVERMELHO     10
+#define LED_VIDAVERMELHO1    11
+#define LED_VIDAVERMELHO2    12
+
+// Conta a Quantidade de Vidas
+int Cont_Vidas = 3;
+ 
+// Variaveis do tempo que fica piscando a sequencia 
+#define TEMPO_PISCA 600
+#define TEMPO_ENTRE 150
+
+// Variedade da Quantidade de Sequencia e seu valor
+#define QT_SEQ 4
+
+// Vetor para o Numero de Sorteios
+int sorteados[QT_SEQ]; // QT_SEQ é o tamanho da sequência dos leds
+ 
+//--------------Declaração da função de cada elemento---------------//
+void setup() {
+  Serial.begin(9600);
+ 
+  pinMode(LED_VERMELHO, OUTPUT);
+  pinMode(LED_VERDE, OUTPUT);
+  pinMode(LED_AMARELO, OUTPUT);
+  pinMode(LED_VERMELHO2, OUTPUT);
+ 
+  pinMode(BUTTON_VERMELHO, INPUT_PULLUP);
+  pinMode(BUTTON_VERDE, INPUT_PULLUP);
+  pinMode(BUTTON_AMARELO, INPUT_PULLUP);
+  pinMode(BUTTON_VERMELHO2, INPUT_PULLUP);
+   
+  randomSeed(analogRead(0)); //Sorteia uma nova sequencia toda vez que liga o Arduino
+}
+ 
+//----------Loop do sorteio, leitura de botão e comparação----------//
+void loop() {
+  
+  //Acende os LEDS de Sequencia
+  digitalWrite(LED_VERMELHO, HIGH);
+  digitalWrite(LED_VERDE, HIGH);
+  digitalWrite(LED_AMARELO, HIGH);
+  digitalWrite(LED_VERMELHO2, HIGH);
+
+  // Acende todos os Leds de Vida
+  vida();
+
+  // Função que lê os botões para iniciar e escolher a sequencia
+  le_botao(); 
+  
+  //Apaga os LEDS da Sequencia
+  digitalWrite(LED_VERMELHO, LOW);
+  digitalWrite(LED_VERDE, LOW);
+  digitalWrite(LED_AMARELO, LOW);
+  digitalWrite(LED_VERMELHO2, LOW);
+  delay(500);
+ 
+//-----------------------Sorteio da sequência-----------------------//
+//QT_SEQ é o tamanho da sequência - quantas vezes os LEDs piscam 
+  for(int jogada = 0; jogada < QT_SEQ; jogada ++) { 
+    sorteados[jogada] = random(4);
+    pisca_led(sorteados[jogada]);
+    delay(TEMPO_ENTRE);
+  } 
+
+//---------------------Comparação da sequência----------------------//
+  int vez; //Definido fora do for para poder verificar numero de acertos no final
+  for(vez = 0; vez < QT_SEQ; vez ++) {
+    if(le_botao() == sorteados[vez]) {
+      pisca_led(sorteados[vez]);
+    } else {
+      pisca_led(sorteados[vez]);
+      break;
+    }
+  }
+
+//----------------------------Resultado-----------------------------// // Mudar
+  if(vez == QT_SEQ) { 
+
+    // Se Ganhou Pisca duas Vezes devagar
+    delay(500);
+    
+    digitalWrite(LED_VERMELHO, HIGH);
+    digitalWrite(LED_VERDE, HIGH);
+    digitalWrite(LED_AMARELO, HIGH);
+    digitalWrite(LED_VERMELHO2, HIGH);
+    delay(1000);
+    
+    digitalWrite(LED_VERMELHO, LOW);
+    digitalWrite(LED_VERDE, LOW);
+    digitalWrite(LED_AMARELO, LOW);
+    digitalWrite(LED_VERMELHO2, LOW);
+    delay(1000);
+
+    digitalWrite(LED_VERMELHO, HIGH);
+    digitalWrite(LED_VERDE, HIGH);
+    digitalWrite(LED_AMARELO, HIGH);
+    digitalWrite(LED_VERMELHO2, HIGH);
+    delay(1000);
+    
+    digitalWrite(LED_VERMELHO, LOW);
+    digitalWrite(LED_VERDE, LOW);
+    digitalWrite(LED_AMARELO, LOW);
+    digitalWrite(LED_VERMELHO2, LOW);
+    delay(1000);
+
+    
+
+
+  } else { 
+
+    // Se Perdeu Pisca 3 Vezes Rápidas
+    delay(500);
+    
+    digitalWrite(LED_VERMELHO, HIGH);
+    digitalWrite(LED_VERDE, HIGH);
+    digitalWrite(LED_AMARELO, HIGH);
+    digitalWrite(LED_VERMELHO2, HIGH);
+    delay(100);
+    
+    digitalWrite(LED_VERMELHO, LOW);
+    digitalWrite(LED_VERDE, LOW);
+    digitalWrite(LED_AMARELO, LOW);
+    digitalWrite(LED_VERMELHO2, LOW);
+    delay(100);
+    
+    digitalWrite(LED_VERMELHO, HIGH);
+    digitalWrite(LED_VERDE, HIGH);
+    digitalWrite(LED_AMARELO, HIGH);
+    digitalWrite(LED_VERMELHO2, HIGH);
+    delay(100);
+
+    digitalWrite(LED_VERMELHO, LOW);
+    digitalWrite(LED_VERDE, LOW);
+    digitalWrite(LED_AMARELO, LOW);
+    digitalWrite(LED_VERMELHO2, LOW);
+    delay(100);
+
+    digitalWrite(LED_VERMELHO, HIGH);
+    digitalWrite(LED_VERDE, HIGH);
+    digitalWrite(LED_AMARELO, HIGH);
+    digitalWrite(LED_VERMELHO2, HIGH);
+    delay(100);
+
+    digitalWrite(LED_VERMELHO, LOW);
+    digitalWrite(LED_VERDE, LOW);
+    digitalWrite(LED_AMARELO, LOW);
+    digitalWrite(LED_VERMELHO2, LOW);
+    delay(100);
+
+    Cont_Vidas = Cont_Vidas - 1;
+    
+  }
+} //Fim do loop
+ 
+//------------------------Função piscar LED-------------------------//
+void pisca_led(int posicao) {
+  Serial.println(posicao);
+ 
+  if(posicao == 0) {
+    digitalWrite(LED_VERMELHO, HIGH);
+    //tone(BUZZER, TOM_A);
+    delay(TEMPO_PISCA);
+    digitalWrite(LED_VERMELHO, LOW);
+    
+  } else if(posicao == 1) {
+    digitalWrite(LED_VERDE, HIGH);
+    //tone(BUZZER, TOM_B);
+    delay(TEMPO_PISCA);
+    digitalWrite(LED_VERDE, LOW);
+    
+  } else if(posicao == 2) {
+    digitalWrite(LED_AMARELO, HIGH);
+    //tone(BUZZER, TOM_C);
+    delay(TEMPO_PISCA);
+    digitalWrite(LED_AMARELO, LOW);
+    
+  } else if(posicao == 3) {
+    digitalWrite(LED_VERMELHO2, HIGH);
+    //tone(BUZZER, TOM_D);
+    delay(TEMPO_PISCA);
+    digitalWrite(LED_VERMELHO2, LOW);
+    
+  } 
+  delay(100);
+
+}
+
+// Função que apaga os LEDS e Conta as vidas
+void vida() {
+
+  digitalWrite(LED_VIDAVERMELHO, HIGH);
+  digitalWrite(LED_VIDAVERMELHO1, HIGH);
+  digitalWrite(LED_VIDAVERMELHO2, HIGH);
+
+  // Apaga os Leds quando erra
+  if(Cont_Vidas ==  2){
+     digitalWrite(LED_VIDAVERMELHO2, LOW);
+  }
+
+  if(Cont_Vidas ==  1){
+     digitalWrite(LED_VIDAVERMELHO2, LOW);
+     digitalWrite(LED_VIDAVERMELHO1, LOW);
+  }
+
+  if(Cont_Vidas ==  0){
+     digitalWrite(LED_VIDAVERMELHO2, LOW);
+     digitalWrite(LED_VIDAVERMELHO1, LOW);
+     digitalWrite(LED_VIDAVERMELHO, LOW);
+  }
+
+ 
+} 
+
+
+//------------------------Função ler os botões----------------------//
+int le_botao () {
+  int result = -1; //-1 indica que nenhum botão foi apertado
+
+  while(result == -1) {
+    if(digitalRead(BUTTON_VERMELHO) == LOW) {
+      result = 0;    //Posição 
+      
+    } else if(digitalRead(BUTTON_VERDE) == LOW) {
+      result = 1;
+      
+    } else if(digitalRead(BUTTON_AMARELO) == LOW) {
+      result = 2;
+      
+    }
+    else if(digitalRead(BUTTON_VERMELHO2) == LOW) {
+      result = 3;
+      
+    }
+  }
+  return result; //Retorna o inteiro int le_botao
+}
