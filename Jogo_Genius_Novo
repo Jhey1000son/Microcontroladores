@@ -1,0 +1,102 @@
+
+// Variaveis dos Leds da Sequencia e Valor das Entradas
+#define LED_VERMELHO    2
+#define LED_VERDE       3
+#define LED_AMARELO     4
+#define LED_VERMELHO2   5
+
+// Variaveis dos Botões da Sequencia e Valor das Entradas
+#define BUTTON_VERMELHO    6  
+#define BUTTON_VERDE       7
+#define BUTTON_AMARELO     8
+#define BUTTON_VERMELHO2   9
+
+// Variaveis dos Leds das Vidas e Valor das Entradas
+#define LED_VIDAVERMELHO     10
+#define LED_VIDAVERMELHO1    11
+#define LED_VIDAVERMELHO2    12
+
+
+int sequencia[20] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19};
+
+int qtn_seq = 20;
+
+int inicio = 0;
+
+void setup() {
+  // put your setup code here, to run once:
+
+  pinMode(LED_VERMELHO, OUTPUT);
+  pinMode(LED_VERDE, OUTPUT);
+  pinMode(LED_AMARELO, OUTPUT);
+  pinMode(LED_VERMELHO2, OUTPUT);
+ 
+  pinMode(BUTTON_VERMELHO, INPUT_PULLUP);
+  pinMode(BUTTON_VERDE, INPUT_PULLUP);
+  pinMode(BUTTON_AMARELO, INPUT_PULLUP);
+  pinMode(BUTTON_VERMELHO2, INPUT_PULLUP);
+
+  randomSeed(analogRead(0)); //Sorteia uma nova sequencia toda vez que liga o Arduino
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+
+  //Acende os LEDS de Sequencia
+  //digitalWrite(LED_VERMELHO, HIGH);
+  //digitalWrite(LED_VERDE, HIGH);
+  //digitalWrite(LED_AMARELO, HIGH);
+  //digitalWrite(LED_VERMELHO2, HIGH);
+
+  mostrar_sequencia();
+
+  //Apaga os LEDS da Sequencia
+  //digitalWrite(LED_VERMELHO, LOW);
+  //digitalWrite(LED_VERDE, LOW);
+  //digitalWrite(LED_AMARELO, LOW);
+  //digitalWrite(LED_VERMELHO2, LOW);
+  //delay(500);
+
+}
+
+void mostrar_sequencia(){
+    if(inicio == 0){
+    for(inicio; inicio < sequencia[20]; inicio++){
+          sequencia[inicio] = random(4);
+          piscar_led(sequencia[inicio]);
+          delay(500);
+    }
+    inicio = inicio+1;
+    }
+}
+
+void piscar_led(int N_LED){
+
+  digitalWrite(N_LED, HIGH);
+  delay(500);
+
+  digitalWrite(N_LED, LOW);
+  delay(500);
+  
+}
+
+int leia_botao(){
+  
+  int npressionado = 0; //nenhum botão pressionado
+
+  if(digitalRead(BUTTON_VERMELHO)){
+    npressionado = 1;
+  }
+  if(digitalRead(BUTTON_VERDE)){
+    npressionado = 2;
+  }
+  if(digitalRead(BUTTON_AMARELO)){
+    npressionado = 3;
+  }
+  if(digitalRead(BUTTON_VERMELHO)){
+    npressionado = 4;
+  }
+    return npressionado;
+}
+
+
