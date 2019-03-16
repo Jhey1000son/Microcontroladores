@@ -7,8 +7,8 @@
 /***************** variáveis globais *******************/
 
 int sequencia[32] = {};
-int botoes[4] = {8, 9, 10, 11};
-int leds[4] = {2, 3, 4, 5};
+int botoes[4] = {3, 5, 7, 9};
+int leds[4] = {2, 4, 6, 8};
 int tons[4] = {262, 294, 330, 349};
 int rodada = 0;
 int passo = 0;
@@ -17,16 +17,16 @@ bool game_over = false;
 void setup() {
   // Leds
   pinMode(2, OUTPUT);
-  pinMode(3, OUTPUT);
   pinMode(4, OUTPUT);
-  pinMode(5, OUTPUT);
+  pinMode(6, OUTPUT);
+  pinMode(8, OUTPUT);
   // Buzzer
-  pinMode(7, OUTPUT);
+  pinMode(10, OUTPUT);
   // Botões
-  pinMode(8, INPUT);
+  pinMode(3, INPUT);
+  pinMode(5, INPUT);
+  pinMode(7, INPUT);
   pinMode(9, INPUT);
-  pinMode(10, INPUT);
-  pinMode(11, INPUT);
 }
 
 void loop() {
