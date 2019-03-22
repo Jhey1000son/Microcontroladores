@@ -10,30 +10,42 @@
  
 int tons[4] = { NOTE_A5, NOTE_A4, NOTE_G4, NOTE_D4 };
 int sequencia[100] = {};
+int ledsvidas[3] = {11, 12, 13};
 int rodada_atual = 0;
 int passo_atual_na_sequencia = 0;
 
- int audio = 10;
+int audio = 10;
 int pinoAudio = 10;
 int pinosLeds[4] = { 2, 4, 6, 8 };
 int pinosBotoes[4] = { 3, 5, 7, 9 };
 int botao_pressionado = 0;
 int perdeu_o_jogo = false;
+int vida = 4;
  
 void setup() {
+
+  //Acende Leds de Vida
+  digitalWrite(11, HIGH);
+  digitalWrite(12, HIGH);
+  digitalWrite(13, HIGH);
+  // Definindo o modo dos pinos dos Leds como entrada.
   for (int i = 0; i <= 3; i++) {
     pinMode(pinosLeds[i], OUTPUT);
   }
- 
   // Definindo o modo dos pinos dos Botes como entrada.
   for (int i = 0; i <= 3; i++) {
     pinMode(pinosBotoes[i], INPUT_PULLUP);
   }
- 
+  // Definindo o modo dos pinos dos Leds de Vidas como entrada.
+  for (int i = 0; i <=2; i++){
+    pinMode(ledsvidas[i], OUTPUT);
+  }
+  // Pino do Buzzer
   pinMode(pinoAudio, OUTPUT);
   
   randomSeed(analogRead(0));
   Serial.begin(230400);
+  
 }
  
 void loop() {
@@ -43,6 +55,15 @@ void loop() {
     rodada_atual = 0;
     passo_atual_na_sequencia = 0;
     perdeu_o_jogo = false;
+    Vida();
+
+    if (vida == 0) {
+
+      somperdeuTodasVidas();
+      
+    }
+
+    
   }
  
   if (rodada_atual == 0) {
@@ -137,10 +158,48 @@ void verificarJogada() {
     noTone(pinoAudio);
  
     perdeu_o_jogo = true;
+    vida = vida - 1;
   }
 }
  
 void tocarSomDeInicio() {
+  somMarioInicio();
+  digitalWrite(pinosLeds[0], HIGH);
+  digitalWrite(pinosLeds[1], HIGH);
+  digitalWrite(pinosLeds[2], HIGH);
+  digitalWrite(pinosLeds[3], HIGH);
+  delay(500);
+  digitalWrite(pinosLeds[0], LOW);
+  digitalWrite(pinosLeds[1], LOW);
+  digitalWrite(pinosLeds[2], LOW);
+  digitalWrite(pinosLeds[3], LOW);
+  delay(500);
+  
+}
+
+void Vida(){
+
+  
+  if (vida == 3) {
+    digitalWrite (11, LOW);
+  }
+  if (vida == 2) {
+    digitalWrite (11, LOW);
+    digitalWrite (12, LOW);
+  }
+  if (vida == 1) {
+    digitalWrite (11, LOW);
+    digitalWrite (12, LOW);
+    digitalWrite (13, LOW);
+    delay(1000);
+
+      vida = 0;
+  }
+
+ 
+}
+
+void somMarioInicio(){
   tone(audio, NOTE_E);
   digitalWrite(pinosLeds[0], HIGH);
   delay(200);
@@ -179,17 +238,32 @@ void tocarSomDeInicio() {
   tone(audio, NOTE_G1);
   digitalWrite(pinosLeds[1], HIGH);
   delay(800);
+  digitalWrite(pinosLeds[1], LOW);
   noTone(audio);
   delay(1000);
-  digitalWrite(pinosLeds[0], HIGH);
-  digitalWrite(pinosLeds[1], HIGH);
-  digitalWrite(pinosLeds[2], HIGH);
-  digitalWrite(pinosLeds[3], HIGH);
-  delay(500);
-  digitalWrite(pinosLeds[0], LOW);
-  digitalWrite(pinosLeds[1], LOW);
-  digitalWrite(pinosLeds[2], LOW);
-  digitalWrite(pinosLeds[3], LOW);
-  delay(500);
-  
+}
+
+void somperdeuTodasVidas(){
+
+    
+      tone(audio, NOTE_E);
+      digitalWrite(pinosLeds[0], HIGH);
+      digitalWrite(pinosLeds[1], HIGH);
+      digitalWrite(pinosLeds[2], HIGH);
+      digitalWrite(pinosLeds[3], HIGH);
+      delay(3000);
+      noTone(audio);
+      digitalWrite(pinosLeds[0], LOW);
+      digitalWrite(pinosLeds[1], LOW);
+      digitalWrite(pinosLeds[2], LOW);
+      digitalWrite(pinosLeds[3], LOW);
+      
+      delay(1000);
+
+      vida = 4; // Retorna as Vidas e Acende novamente as Luzes
+       //Acende Leds de Vida
+      digitalWrite(11, HIGH);
+      digitalWrite(12, HIGH);
+      digitalWrite(13, HIGH); 
+      
 }
